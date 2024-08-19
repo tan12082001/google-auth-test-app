@@ -16,6 +16,13 @@ module GoogleAuthTestAppRails
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w(assets tasks))
 
+    # Enable cookies and sessions for OmniAuth in API-only mode
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore, key: '_googleauth_test_app_session'
+
+    # Optional: Protect your sessions from CSRF attacks (you might need to fine-tune this for API requests)
+    config.action_controller.allow_forgery_protection = false
+  
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
