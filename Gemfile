@@ -16,6 +16,10 @@ gem 'omniauth-google-oauth2'
 
 # Use gem rack-cors
 gem 'rack-cors'
+
+# Use dotenv to hide the secret keys
+gem 'dotenv-rails', groups: [:development, :test]
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
