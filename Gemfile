@@ -20,6 +20,8 @@ gem 'rack-cors'
 # Use dotenv to hide the secret keys
 gem 'dotenv-rails', groups: [:development, :test]
 
+gem 'httparty'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
