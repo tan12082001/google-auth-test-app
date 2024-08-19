@@ -1,4 +1,4 @@
-class Api::V1::SessionsController < ApplicationController
+class Api::V1::SessionsController < ApplicationController::API
     skip_before_action :verify_authenticity_token, only: :create
 
     # POST /api/v1/login
