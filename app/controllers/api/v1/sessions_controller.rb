@@ -1,26 +1,41 @@
-class Api::V1::SessionsController < ApplicationController::API
-    skip_before_action :verify_authenticity_token, only: :create
+require 'httparty'
 
-    # POST /api/v1/login
-    def create
-      user = User.find_or_create_from_auth_hash(auth_hash)
-      if user
-        session[:user_id] = user.id
-        render json: { user: user, message: 'Logged in successfully' }, status: :ok
-      else
-        render json: { error: 'Authentication failed' }, status: :unauthorized
+class Api::V1::SessionsController < ApplicationController
+  # skip_before_action :verify_authenticity_token, only: :create
+
+  # POST /api/v1/login
+  def create
+    token = params[:id_token]
+
+    user_info = verify_google_token(token)
+    if user_info
+      user = User.find_or_create_by(email: user_info['email']) do |u|
+        u.name = user_info['name']
+        u.uid = user_info['sub']
+        u.provider = 'google'
       end
+
+      session[:user_id] = user.id
+      render json: { user: user, message: 'Logged in successfully' }, status: :ok
+    else
+      render json: { error: 'Authentication failed' }, status: :unauthorized
     end
-  
-    # DELETE /api/v1/logout
-    def destroy
-      session.delete(:user_id)
-      render json: { message: 'Logged out successfully' }, status: :ok
+  end
+
+  # DELETE /api/v1/logout
+  def destroy
+    session.delete(:user_id)
+    render json: { message: 'Logged out successfully' }, status: :ok
+  end
+
+  private
+
+  def verify_google_token(token)
+    response = HTTParty.get("https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=#{token}")
+    if response.code == 200
+      JSON.parse(response.body)
+    else
+      nil
     end
-  
-    private
-  
-    def auth_hash
-      request.env['omniauth.auth']
-    end
+  end
 end
