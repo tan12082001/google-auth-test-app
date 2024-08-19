@@ -14,6 +14,8 @@ gem "puma", ">= 5.0"
 # Use gem `omniauth-google-oauth2` to handle google authentication.
 gem 'omniauth-google-oauth2'
 
+# Use gem rack-cors
+gem 'rack-cors'
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 
